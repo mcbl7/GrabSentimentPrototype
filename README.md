@@ -175,8 +175,3 @@ Cleaned and validation datasets are stored inside the `data/` directory.
 ## Purpose
 
 This project demonstrates how machine learning and natural language processing can be used to analyze customer feedback and derive useful information about customer satisfaction and recurring service concerns.
-
-## Author
-
-**Maria Chesam B. Leonor**  
-BS Information Technology – Data Analytics
