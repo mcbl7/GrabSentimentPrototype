@@ -1,0 +1,31 @@
+{
+  "dataset": {
+    "total_reviews": 14291,
+    "android_reviews": 4296,
+    "ios_reviews": 9995
+  },
+  "split": {
+    "random_state": 42,
+    "test_size": 0.2,
+    "train_reviews": 11432,
+    "test_reviews": 2859
+  },
+  "train_sentiment": {
+    "Positive": 5905,
+    "Negative": 4915,
+    "Neutral": 612
+  },
+  "test_sentiment": {
+    "Positive": 1477,
+    "Negative": 1229,
+    "Neutral": 153
+  },
+  "train_platform": {
+    "ios": 7995,
+    "android": 3437
+  },
+  "test_platform": {
+    "ios": 2000,
+    "android": 859
+  }
+}
