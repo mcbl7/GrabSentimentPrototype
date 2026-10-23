@@ -1231,7 +1231,6 @@ with st.container(border=True):
             "Enter Grab user review:",
             placeholder=(
                 "Example: The rider was polite "
-                "but my order arrived very late."
             ),
             height=130,
         )
