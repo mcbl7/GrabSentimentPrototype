@@ -245,8 +245,8 @@ div[data-testid="stVegaLiteChart"] {
 @st.cache_data
 def load_data():
 
-    df = pd.read_csv(
-        "data/reviews_cleaned.csv"
+    df = pd.read_excel(
+        "data/reviews_cleaned.xlsx"
     )
 
     df["Store"] = (
@@ -553,59 +553,57 @@ st.divider()
 # NINE-MODEL COMPARISON
 # ============================================================
 
-st.markdown(
-    '<div class="section-label">Model Selection</div>'
-    '<div class="section-title">Nine-Model Comparison</div>'
-    '<div class="section-description">'
-    'Comparison of three text representations and three '
-    'machine-learning classifiers using the cleaned dataset.'
-    '</div>',
-    unsafe_allow_html=True,
-)
-
-
-with st.container(border=True):
+with st.expander(
+    "Model Selection",
+    expanded=False,
+):
 
     st.markdown(
-        '<span class="status-pill">'
-        'Selected model · TF-IDF + Linear SVM'
-        '</span>',
+        '<div class="section-label">Model Selection</div>'
+        '<div class="section-title">Nine-Model Comparison</div>'
+        '<div class="section-description">'
+        'Comparison of three text representations and three '
+        'machine-learning classifiers using the cleaned dataset.'
+        '</div>',
         unsafe_allow_html=True,
     )
 
-    st.write("")
 
-    summary1, summary2, summary3 = st.columns(3)
+    with st.container(border=True):
 
-    summary1.metric(
-        "Best CV Macro-F1",
-        "0.6254",
-    )
+        st.markdown(
+            '<span class="status-pill">'
+            'Selected model · TF-IDF + Linear SVM'
+            '</span>',
+            unsafe_allow_html=True,
+        )
 
-    summary2.metric(
-        "Test Accuracy",
-        "82.83%",
-    )
+        st.write("")
 
-    summary3.metric(
-        "Test Macro-F1",
-        "0.6271",
-    )
+        summary1, summary2, summary3 = st.columns(3)
 
-    st.caption(
-        "TF-IDF + Linear SVM achieved the highest "
-        "5-fold cross-validation Macro-F1 among the "
-        "nine evaluated model configurations."
-    )
+        summary1.metric(
+            "Best CV Macro-F1",
+            "0.6254",
+        )
 
-    st.write("")
+        summary2.metric(
+            "Test Accuracy",
+            "82.83%",
+        )
 
-    show_comparison = st.toggle(
-        "Show detailed model comparison",
-        value=False,
-    )
+        summary3.metric(
+            "Test Macro-F1",
+            "0.6271",
+        )
 
-    if show_comparison:
+        st.caption(
+            "TF-IDF + Linear SVM achieved the highest "
+            "5-fold cross-validation Macro-F1 among the "
+            "nine evaluated model configurations."
+        )
+
+        st.write("")
 
         model_comparison = pd.DataFrame(
             {
@@ -751,109 +749,114 @@ st.divider()
 # FINAL MODEL PERFORMANCE
 # ============================================================
 
-st.markdown(
-    '<div class="section-label">Evaluation</div>'
-    '<div class="section-title">Final Model Performance</div>'
-    '<div class="section-description">'
-    'Performance of the selected TF-IDF + Linear SVM classifier '
-    'on the cleaned held-out test set.'
-    '</div>',
-    unsafe_allow_html=True,
-)
-
-
-with st.container(border=True):
-
-    perf1, perf2, perf3, perf4 = st.columns(4)
-
-    perf1.metric(
-        "Test Accuracy",
-        "82.83%",
-    )
-
-    perf2.metric(
-        "Test Macro-F1",
-        "0.6271",
-    )
-
-    perf3.metric(
-        "Weighted F1",
-        "0.8232",
-    )
-
-    perf4.metric(
-        "CV Macro-F1",
-        "0.6254",
-    )
-
-    st.caption(
-        "Best Linear SVM hyperparameter: C = 0.1"
-    )
-
-
-st.write("")
-
-
-# ============================================================
-# CLASS PERFORMANCE
-# ============================================================
-
-with st.container(border=True):
+with st.expander(
+    "Model Evaluation",
+    expanded=False,
+):
 
     st.markdown(
-        "#### Performance by Sentiment Class"
-    )
-
-    class_performance = pd.DataFrame(
-        {
-            "Sentiment": [
-                "Negative",
-                "Neutral",
-                "Positive",
-            ],
-            "Precision": [
-                0.79,
-                0.20,
-                0.91,
-            ],
-            "Recall": [
-                0.90,
-                0.14,
-                0.84,
-            ],
-            "F1 Score": [
-                0.84,
-                0.16,
-                0.87,
-            ],
-            "Test Support": [
-                1229,
-                153,
-                1477,
-            ],
-        }
-    )
-
-    st.dataframe(
-        class_performance,
-        width="stretch",
-        hide_index=True,
-    )
-
-    st.markdown(
-        '<span class="warning-pill">'
-        'Neutral class limitation'
-        '</span>',
+        '<div class="section-label">Evaluation</div>'
+        '<div class="section-title">Final Model Performance</div>'
+        '<div class="section-description">'
+        'Performance of the selected TF-IDF + Linear SVM classifier '
+        'on the cleaned held-out test set.'
+        '</div>',
         unsafe_allow_html=True,
     )
 
+
+    with st.container(border=True):
+
+        perf1, perf2, perf3, perf4 = st.columns(4)
+
+        perf1.metric(
+            "Test Accuracy",
+            "82.83%",
+        )
+
+        perf2.metric(
+            "Test Macro-F1",
+            "0.6271",
+        )
+
+        perf3.metric(
+            "Weighted F1",
+            "0.8232",
+        )
+
+        perf4.metric(
+            "CV Macro-F1",
+            "0.6254",
+        )
+
+        st.caption(
+            "Best Linear SVM hyperparameter: C = 0.1"
+        )
+
+
     st.write("")
 
-    st.info(
-        "Neutral reviews represented the smallest class "
-        "and were the most difficult sentiment category "
-        "for the final classifier."
-    )
+
+    # ============================================================
+    # CLASS PERFORMANCE
+    # ============================================================
+
+    with st.container(border=True):
+
+        st.markdown(
+            "#### Performance by Sentiment Class"
+        )
+
+        class_performance = pd.DataFrame(
+            {
+                "Sentiment": [
+                    "Negative",
+                    "Neutral",
+                    "Positive",
+                ],
+                "Precision": [
+                    0.79,
+                    0.20,
+                    0.91,
+                ],
+                "Recall": [
+                    0.90,
+                    0.14,
+                    0.84,
+                ],
+                "F1 Score": [
+                    0.84,
+                    0.16,
+                    0.87,
+                ],
+                "Test Support": [
+                    1229,
+                    153,
+                    1477,
+                ],
+            }
+        )
+
+        st.dataframe(
+            class_performance,
+            width="stretch",
+            hide_index=True,
+        )
+
+        st.markdown(
+            '<span class="warning-pill">'
+            'Neutral class limitation'
+            '</span>',
+            unsafe_allow_html=True,
+        )
+
+        st.write("")
+
+        st.info(
+            "Neutral reviews represented the smallest class "
+            "and were the most difficult sentiment category "
+            "for the final classifier."
+        )
 
 
 st.divider()
@@ -863,100 +866,105 @@ st.divider()
 # PLATFORM PERFORMANCE
 # ============================================================
 
-st.markdown(
-    '<div class="section-label">Platform Evaluation</div>'
-    '<div class="section-title">Android vs iOS Performance</div>'
-    '<div class="section-description">'
-    'Performance of the final classifier on platform-specific '
-    'subsets of the cleaned held-out test set.'
-    '</div>',
-    unsafe_allow_html=True,
-)
+with st.expander(
+    "Platform Evaluation",
+    expanded=False,
+):
 
-
-with st.container(border=True):
-
-    metric_left, metric_right = st.columns(
-        2,
-        gap="large",
+    st.markdown(
+        '<div class="section-label">Platform Evaluation</div>'
+        '<div class="section-title">Android vs iOS Performance</div>'
+        '<div class="section-description">'
+        'Performance of the final classifier on platform-specific '
+        'subsets of the cleaned held-out test set.'
+        '</div>',
+        unsafe_allow_html=True,
     )
 
 
-    with metric_left:
+    with st.container(border=True):
 
-        st.markdown(
-            "#### Android"
+        metric_left, metric_right = st.columns(
+            2,
+            gap="large",
         )
 
-        a1, a2 = st.columns(2)
 
-        a1.metric(
-            "Accuracy",
-            "89.76%",
+        with metric_left:
+
+            st.markdown(
+                "#### Android"
+            )
+
+            a1, a2 = st.columns(2)
+
+            a1.metric(
+                "Accuracy",
+                "89.76%",
+            )
+
+            a2.metric(
+                "Macro-F1",
+                "0.6542",
+            )
+
+            st.caption(
+                "859 reviews in the cleaned test set."
+            )
+
+
+        with metric_right:
+
+            st.markdown(
+                "#### iOS"
+            )
+
+            i1, i2 = st.columns(2)
+
+            i1.metric(
+                "Accuracy",
+                "79.85%",
+            )
+
+            i2.metric(
+                "Macro-F1",
+                "0.6125",
+            )
+
+            st.caption(
+                "2,000 reviews in the cleaned test set."
+            )
+
+
+        platform_metrics_chart = pd.DataFrame(
+            {
+                "Platform": [
+                    "Android",
+                    "iOS",
+                ],
+                "Accuracy": [
+                    0.897555,
+                    0.798500,
+                ],
+                "Macro F1": [
+                    0.654218,
+                    0.612487,
+                ],
+            }
+        ).set_index(
+            "Platform"
         )
 
-        a2.metric(
-            "Macro-F1",
-            "0.6542",
+        st.bar_chart(
+            platform_metrics_chart,
+            width="stretch",
         )
 
         st.caption(
-            "859 reviews in the cleaned test set."
+            "These values describe observed test-set performance. "
+            "No causal explanation for the platform difference "
+            "is assumed."
         )
-
-
-    with metric_right:
-
-        st.markdown(
-            "#### iOS"
-        )
-
-        i1, i2 = st.columns(2)
-
-        i1.metric(
-            "Accuracy",
-            "79.85%",
-        )
-
-        i2.metric(
-            "Macro-F1",
-            "0.6125",
-        )
-
-        st.caption(
-            "2,000 reviews in the cleaned test set."
-        )
-
-
-    platform_metrics_chart = pd.DataFrame(
-        {
-            "Platform": [
-                "Android",
-                "iOS",
-            ],
-            "Accuracy": [
-                0.897555,
-                0.798500,
-            ],
-            "Macro F1": [
-                0.654218,
-                0.612487,
-            ],
-        }
-    ).set_index(
-        "Platform"
-    )
-
-    st.bar_chart(
-        platform_metrics_chart,
-        width="stretch",
-    )
-
-    st.caption(
-        "These values describe observed test-set performance. "
-        "No causal explanation for the platform difference "
-        "is assumed."
-    )
 
 
 st.divider()
@@ -966,94 +974,99 @@ st.divider()
 # CUSTOMER DISSATISFACTION FACTORS
 # ============================================================
 
-st.markdown(
-    '<div class="section-label">Negative Review Analysis</div>'
-    '<div class="section-title">'
-    'Customer Dissatisfaction Factors'
-    '</div>'
-    '<div class="section-description">'
-    'Operational complaint categories identified through '
-    'keyword-in-context analysis of reviews predicted as Negative.'
-    '</div>',
-    unsafe_allow_html=True,
-)
+with st.expander(
+    "Negative Review Analysis",
+    expanded=False,
+):
 
-
-with st.container(border=True):
-
-    negative1, negative2 = st.columns(2)
-
-    negative1.metric(
-        "Predicted Negative Reviews",
-        "6,750",
+    st.markdown(
+        '<div class="section-label">Negative Review Analysis</div>'
+        '<div class="section-title">'
+        'Customer Dissatisfaction Factors'
+        '</div>'
+        '<div class="section-description">'
+        'Operational complaint categories identified through '
+        'keyword-in-context analysis of reviews predicted as Negative.'
+        '</div>',
+        unsafe_allow_html=True,
     )
 
-    negative2.metric(
-        "Analysis Method",
-        "KWIC",
-    )
 
-    st.caption(
-        "A negative review may match more than one factor, "
-        "so percentages are not expected to total 100%."
-    )
+    with st.container(border=True):
 
-    dissatisfaction_df = pd.DataFrame(
-        {
-            "Factor": [
-                "Application Performance",
-                "Order Fulfillment & Accuracy",
-                "Driver/Rider/Courier Conduct",
-                "Payment & Refund",
-                "Customer Support",
-                "Waiting Time & Delay",
-                "Pricing & Fare",
-            ],
-            "Matched Reviews": [
-                2438,
-                2332,
-                2014,
-                1528,
-                1166,
-                979,
-                933,
-            ],
-            "Percentage": [
-                36.12,
-                34.55,
-                29.84,
-                22.64,
-                17.27,
-                14.50,
-                13.82,
-            ],
-        }
-    )
+        negative1, negative2 = st.columns(2)
 
-    st.write("")
-
-    st.dataframe(
-        dissatisfaction_df,
-        width="stretch",
-        hide_index=True,
-    )
-
-    kwic_chart = (
-        dissatisfaction_df[
-            [
-                "Factor",
-                "Percentage",
-            ]
-        ]
-        .set_index(
-            "Factor"
+        negative1.metric(
+            "Predicted Negative Reviews",
+            "6,750",
         )
-    )
 
-    st.bar_chart(
-        kwic_chart,
-        width="stretch",
-    )
+        negative2.metric(
+            "Analysis Method",
+            "KWIC",
+        )
+
+        st.caption(
+            "A negative review may match more than one factor, "
+            "so percentages are not expected to total 100%."
+        )
+
+        dissatisfaction_df = pd.DataFrame(
+            {
+                "Factor": [
+                    "Application Performance",
+                    "Order Fulfillment & Accuracy",
+                    "Driver/Rider/Courier Conduct",
+                    "Payment & Refund",
+                    "Customer Support",
+                    "Waiting Time & Delay",
+                    "Pricing & Fare",
+                ],
+                "Matched Reviews": [
+                    2438,
+                    2332,
+                    2014,
+                    1528,
+                    1166,
+                    979,
+                    933,
+                ],
+                "Percentage": [
+                    36.12,
+                    34.55,
+                    29.84,
+                    22.64,
+                    17.27,
+                    14.50,
+                    13.82,
+                ],
+            }
+        )
+
+        st.write("")
+
+        st.dataframe(
+            dissatisfaction_df,
+            width="stretch",
+            hide_index=True,
+        )
+
+        kwic_chart = (
+            dissatisfaction_df[
+                [
+                    "Factor",
+                    "Percentage",
+                ]
+            ]
+            .set_index(
+                "Factor"
+            )
+        )
+
+        st.bar_chart(
+            kwic_chart,
+            width="stretch",
+        )
 
 
 st.divider()
@@ -1063,111 +1076,116 @@ st.divider()
 # LDA TOPIC MODELING
 # ============================================================
 
-st.markdown(
-    '<div class="section-label">Topic Modeling</div>'
-    '<div class="section-title">'
-    'Negative Review Topics'
-    '</div>'
-    '<div class="section-description">'
-    'Six dominant topics identified through Latent Dirichlet '
-    'Allocation after Filipino and English stopword filtering.'
-    '</div>',
-    unsafe_allow_html=True,
-)
+with st.expander(
+    "Topic Modeling",
+    expanded=False,
+):
 
-
-with st.container(border=True):
-
-    lda_topics = pd.DataFrame(
-        {
-            "Topic": [
-                "Topic 1",
-                "Topic 2",
-                "Topic 3",
-                "Topic 4",
-                "Topic 5",
-                "Topic 6",
-            ],
-            "Interpreted Theme": [
-                "Food delivery, riders, and order issues",
-                "Ride booking, fares, and pricing",
-                "Cancellations, waiting time, and delays",
-                "Payments, refunds, cards, and wallets",
-                "Location, address, and application issues",
-                "Customer support and service assistance",
-            ],
-            "Reviews": [
-                1337,
-                954,
-                1459,
-                1004,
-                1022,
-                974,
-            ],
-            "Percentage": [
-                19.81,
-                14.13,
-                21.61,
-                14.87,
-                15.14,
-                14.43,
-            ],
-        }
+    st.markdown(
+        '<div class="section-label">Topic Modeling</div>'
+        '<div class="section-title">'
+        'Negative Review Topics'
+        '</div>'
+        '<div class="section-description">'
+        'Six dominant topics identified through Latent Dirichlet '
+        'Allocation after Filipino and English stopword filtering.'
+        '</div>',
+        unsafe_allow_html=True,
     )
 
-    st.dataframe(
-        lda_topics,
-        width="stretch",
-        hide_index=True,
-    )
 
-    topic_chart = (
-        lda_topics[
-            [
-                "Interpreted Theme",
-                "Percentage",
+    with st.container(border=True):
+
+        lda_topics = pd.DataFrame(
+            {
+                "Topic": [
+                    "Topic 1",
+                    "Topic 2",
+                    "Topic 3",
+                    "Topic 4",
+                    "Topic 5",
+                    "Topic 6",
+                ],
+                "Interpreted Theme": [
+                    "Food delivery, riders, and order issues",
+                    "Ride booking, fares, and pricing",
+                    "Cancellations, waiting time, and delays",
+                    "Payments, refunds, cards, and wallets",
+                    "Location, address, and application issues",
+                    "Customer support and service assistance",
+                ],
+                "Reviews": [
+                    1337,
+                    954,
+                    1459,
+                    1004,
+                    1022,
+                    974,
+                ],
+                "Percentage": [
+                    19.81,
+                    14.13,
+                    21.61,
+                    14.87,
+                    15.14,
+                    14.43,
+                ],
+            }
+        )
+
+        st.dataframe(
+            lda_topics,
+            width="stretch",
+            hide_index=True,
+        )
+
+        topic_chart = (
+            lda_topics[
+                [
+                    "Interpreted Theme",
+                    "Percentage",
+                ]
             ]
-        ]
-        .set_index(
-            "Interpreted Theme"
+            .set_index(
+                "Interpreted Theme"
+            )
         )
-    )
 
-    st.bar_chart(
-        topic_chart,
-        width="stretch",
-    )
-
-    st.caption(
-        "Each negative review was assigned to its dominant "
-        "LDA topic, so the percentages total approximately 100%."
-    )
-
-    with st.expander(
-        "View representative topic keywords"
-    ):
-
-        st.markdown(
-            """
-**Topic 1 — Food delivery, riders, and order issues**  
-food, delivery, drivers, order, rider, driver, riders, cancel, orders, time
-
-**Topic 2 — Ride booking, fares, and pricing**  
-drivers, book, ride, uber, booking, price, fare, expensive, high, taxi
-
-**Topic 3 — Cancellations, waiting time, and delays**  
-order, driver, time, cancel, cancelled, hour, waiting, wait, booking, minutes
-
-**Topic 4 — Payments, refunds, cards, and wallets**  
-payment, money, account, card, cash, pay, refund, charged, wallet, gcash
-
-**Topic 5 — Location, address, and application issues**  
-update, fix, location, address, phone, number, pin, keeps, wrong, work
-
-**Topic 6 — Customer support and service assistance**  
-service, customer, support, help, issue, chat, poor, worst, contact, agent
-            """
+        st.bar_chart(
+            topic_chart,
+            width="stretch",
         )
+
+        st.caption(
+            "Each negative review was assigned to its dominant "
+            "LDA topic, so the percentages total approximately 100%."
+        )
+
+        with st.expander(
+            "View representative topic keywords"
+        ):
+
+            st.markdown(
+                """
+    **Topic 1 — Food delivery, riders, and order issues**  
+    food, delivery, drivers, order, rider, driver, riders, cancel, orders, time
+
+    **Topic 2 — Ride booking, fares, and pricing**  
+    drivers, book, ride, uber, booking, price, fare, expensive, high, taxi
+
+    **Topic 3 — Cancellations, waiting time, and delays**  
+    order, driver, time, cancel, cancelled, hour, waiting, wait, booking, minutes
+
+    **Topic 4 — Payments, refunds, cards, and wallets**  
+    payment, money, account, card, cash, pay, refund, charged, wallet, gcash
+
+    **Topic 5 — Location, address, and application issues**  
+    update, fix, location, address, phone, number, pin, keeps, wrong, work
+
+    **Topic 6 — Customer support and service assistance**  
+    service, customer, support, help, issue, chat, poor, worst, contact, agent
+                """
+            )
 
 
 st.divider()
