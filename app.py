@@ -480,7 +480,7 @@ with col_left:
             platform_chart,
             x="Platform",
             y="Reviews",
-            use_container_width=True,
+            width="stretch",
         )
 
 
@@ -542,7 +542,7 @@ with col_right:
             sentiment_chart,
             x="Sentiment",
             y="Reviews",
-            use_container_width=True,
+            width="stretch",
         )
 
 
@@ -568,152 +568,180 @@ with st.container(border=True):
 
     st.markdown(
         '<span class="status-pill">'
-        'Primary selection criterion · 5-fold CV Macro-F1'
+        'Selected model · TF-IDF + Linear SVM'
         '</span>',
         unsafe_allow_html=True,
     )
 
     st.write("")
 
-    model_comparison = pd.DataFrame(
-        {
-            "Representation": [
-                "TF-IDF",
-                "TF-IDF",
-                "TF-IDF",
-                "Word2Vec",
-                "Word2Vec",
-                "Word2Vec",
-                "mBERT",
-                "mBERT",
-                "mBERT",
-            ],
-            "Classifier": [
-                "SVM",
-                "Naive Bayes",
-                "Random Forest",
-                "SVM",
-                "Random Forest",
-                "Gaussian Naive Bayes",
-                "SVM",
-                "Random Forest",
-                "Gaussian Naive Bayes",
-            ],
-            "CV Macro-F1": [
-                0.625449,
-                0.577346,
-                0.545196,
-                0.591519,
-                0.571184,
-                0.500184,
-                0.603459,
-                0.531422,
-                0.519157,
-            ],
-            "Test Accuracy": [
-                0.828262,
-                0.832109,
-                0.792235,
-                0.689402,
-                0.805526,
-                0.625044,
-                0.763204,
-                0.776146,
-                0.622595,
-            ],
-            "Test Macro-F1": [
-                0.627052,
-                0.578244,
-                0.551741,
-                0.584013,
-                0.578699,
-                0.507339,
-                0.579880,
-                0.531686,
-                0.515780,
-            ],
-        }
+    summary1, summary2, summary3 = st.columns(3)
+
+    summary1.metric(
+        "Best CV Macro-F1",
+        "0.6254",
     )
 
-    model_comparison = (
-        model_comparison
-        .sort_values(
-            "CV Macro-F1",
-            ascending=False,
-        )
-        .reset_index(
-            drop=True
-        )
+    summary2.metric(
+        "Test Accuracy",
+        "82.83%",
     )
 
-    st.dataframe(
-        model_comparison,
-        use_container_width=True,
-        hide_index=True,
-        column_config={
-            "CV Macro-F1":
-                st.column_config.NumberColumn(
-                    format="%.4f"
-                ),
-            "Test Accuracy":
-                st.column_config.NumberColumn(
-                    format="%.4f"
-                ),
-            "Test Macro-F1":
-                st.column_config.NumberColumn(
-                    format="%.4f"
-                ),
-        },
+    summary3.metric(
+        "Test Macro-F1",
+        "0.6271",
+    )
+
+    st.caption(
+        "TF-IDF + Linear SVM achieved the highest "
+        "5-fold cross-validation Macro-F1 among the "
+        "nine evaluated model configurations."
     )
 
     st.write("")
 
-    comparison_chart = (
-        model_comparison[
-            [
-                "Representation",
-                "Classifier",
-                "CV Macro-F1",
-            ]
-        ]
-        .copy()
+    show_comparison = st.toggle(
+        "Show detailed model comparison",
+        value=False,
     )
 
-    comparison_chart["Model"] = (
-        comparison_chart["Representation"]
-        + " + "
-        + comparison_chart["Classifier"]
-    )
+    if show_comparison:
 
-    comparison_chart = (
-        comparison_chart[
-            [
-                "Model",
-                "CV Macro-F1",
-            ]
-        ]
-        .set_index(
-            "Model"
+        model_comparison = pd.DataFrame(
+            {
+                "Representation": [
+                    "TF-IDF",
+                    "TF-IDF",
+                    "TF-IDF",
+                    "Word2Vec",
+                    "Word2Vec",
+                    "Word2Vec",
+                    "mBERT",
+                    "mBERT",
+                    "mBERT",
+                ],
+                "Classifier": [
+                    "SVM",
+                    "Naive Bayes",
+                    "Random Forest",
+                    "SVM",
+                    "Random Forest",
+                    "Gaussian Naive Bayes",
+                    "SVM",
+                    "Random Forest",
+                    "Gaussian Naive Bayes",
+                ],
+                "CV Macro-F1": [
+                    0.625449,
+                    0.577346,
+                    0.545196,
+                    0.591519,
+                    0.571184,
+                    0.500184,
+                    0.603459,
+                    0.531422,
+                    0.519157,
+                ],
+                "Test Accuracy": [
+                    0.828262,
+                    0.832109,
+                    0.792235,
+                    0.689402,
+                    0.805526,
+                    0.625044,
+                    0.763204,
+                    0.776146,
+                    0.622595,
+                ],
+                "Test Macro-F1": [
+                    0.627052,
+                    0.578244,
+                    0.551741,
+                    0.584013,
+                    0.578699,
+                    0.507339,
+                    0.579880,
+                    0.531686,
+                    0.515780,
+                ],
+            }
         )
-    )
 
-    st.bar_chart(
-        comparison_chart,
-        use_container_width=True,
-    )
+        model_comparison = (
+            model_comparison
+            .sort_values(
+                "CV Macro-F1",
+                ascending=False,
+            )
+            .reset_index(drop=True)
+        )
 
-    st.success(
-        "**Selected model: TF-IDF + Linear SVM.** "
-        "It achieved the highest 5-fold cross-validation "
-        "Macro-F1 among the nine evaluated configurations."
-    )
+        st.dataframe(
+            model_comparison,
+            width="stretch",
+            hide_index=True,
+            column_config={
+                "CV Macro-F1":
+                    st.column_config.NumberColumn(
+                        format="%.4f"
+                    ),
+                "Test Accuracy":
+                    st.column_config.NumberColumn(
+                        format="%.4f"
+                    ),
+                "Test Macro-F1":
+                    st.column_config.NumberColumn(
+                        format="%.4f"
+                    ),
+            },
+        )
 
-    st.caption(
-        "Although TF-IDF + Naive Bayes achieved slightly "
-        "higher test accuracy, model selection was based on "
-        "cross-validation Macro-F1 to give equal importance "
-        "to all three sentiment classes."
-    )
+        st.write("")
+
+        comparison_chart = (
+            model_comparison[
+                [
+                    "Representation",
+                    "Classifier",
+                    "CV Macro-F1",
+                ]
+            ]
+            .copy()
+        )
+
+        comparison_chart["Model"] = (
+            comparison_chart["Representation"]
+            + " + "
+            + comparison_chart["Classifier"]
+        )
+
+        comparison_chart = (
+            comparison_chart[
+                [
+                    "Model",
+                    "CV Macro-F1",
+                ]
+            ]
+            .set_index("Model")
+        )
+
+        st.bar_chart(
+            comparison_chart,
+            width="stretch",
+        )
+
+        st.success(
+            "**Selected model: TF-IDF + Linear SVM.** "
+            "It achieved the highest 5-fold cross-validation "
+            "Macro-F1 among the nine evaluated configurations."
+        )
+
+        st.caption(
+            "Although TF-IDF + Naive Bayes achieved slightly "
+            "higher test accuracy, model selection was based on "
+            "cross-validation Macro-F1 to give equal importance "
+            "to all three sentiment classes."
+        )
 
 
 st.divider()
@@ -808,7 +836,7 @@ with st.container(border=True):
 
     st.dataframe(
         class_performance,
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -921,7 +949,7 @@ with st.container(border=True):
 
     st.bar_chart(
         platform_metrics_chart,
-        use_container_width=True,
+        width="stretch",
     )
 
     st.caption(
@@ -1006,7 +1034,7 @@ with st.container(border=True):
 
     st.dataframe(
         dissatisfaction_df,
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -1024,7 +1052,7 @@ with st.container(border=True):
 
     st.bar_chart(
         kwic_chart,
-        use_container_width=True,
+        width="stretch",
     )
 
 
@@ -1089,7 +1117,7 @@ with st.container(border=True):
 
     st.dataframe(
         lda_topics,
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -1107,7 +1135,7 @@ with st.container(border=True):
 
     st.bar_chart(
         topic_chart,
-        use_container_width=True,
+        width="stretch",
     )
 
     st.caption(
@@ -1397,7 +1425,7 @@ with st.container(border=True):
 
     st.dataframe(
         st.session_state.demo_reviews,
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
         height=360,
     )
