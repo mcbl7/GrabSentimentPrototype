@@ -246,7 +246,7 @@ div[data-testid="stVegaLiteChart"] {
 def load_data():
 
     df = pd.read_excel(
-        "data/reviews_cleaned.xlsx"
+        "data/reviews_cleaned.csv"
     )
 
     df["Store"] = (
