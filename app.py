@@ -245,7 +245,7 @@ div[data-testid="stVegaLiteChart"] {
 @st.cache_data
 def load_data():
 
-    df = pd.read_excel(
+    df = pd.read_csv(
         "data/reviews_cleaned.csv"
     )
 
