@@ -245,8 +245,8 @@ div[data-testid="stVegaLiteChart"] {
 @st.cache_data
 def load_data():
 
-    df = pd.read_csv(
-        "data/reviews_cleaned.csv"
+    df = pd.read_excel(
+        "data/reviews_cleaned.xlsx"
     )
 
     df["Store"] = (
@@ -742,6 +742,7 @@ with st.expander(
 
 
 
+
 # ============================================================
 # FINAL MODEL PERFORMANCE
 # ============================================================
@@ -1225,6 +1226,7 @@ with st.container(border=True):
             "Enter Grab user review:",
             placeholder=(
                 "Example: The rider was polite "
+                "but my order arrived very late."
             ),
             height=130,
         )
